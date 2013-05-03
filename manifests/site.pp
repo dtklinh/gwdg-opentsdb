@@ -7,7 +7,15 @@ node "slavedb" {
   include prepare_puppetdb::common
   include prepare_puppetdb::slavenode
   include prepare_puppetdb
-  File_line <<| tag == "gwdg" |>>
+#  File_line <<| tag == "gwdg" |>>
+  class {'opentsdb_cluster':
+    install_hadoop     => true,
+    install_hbase      => true,
+    install_opentsdb   => true,
+    install_tcollector => true,
+    setup_user         => true, 
+    compression        => 'LZO',
+  }
 }
 #############################################################################
 /*
