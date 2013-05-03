@@ -1,4 +1,17 @@
 node "masterdb" {
+  include mytest::common
+  include mytest::masternode
+  include mytest
+}
+node "slavedb" {
+  include mytest::common
+  include mytest::slavenode
+  include mytest
+  File_line <<| tag == "gwdg" |>>
+}
+#############################################################################
+/*
+node "masterdb" {
   file { "/etc/puppet/autosign.conf":
     ensure  => present,
     content => '*',
@@ -60,7 +73,8 @@ node "masterdb" {
     puppetdb_server => 'masterdb',
     puppetdb_port   => 8081,
   }
-
+ 
+ 
   # ################# exported resource ######################
 #  @@file { "/etc/puppet/hello2.txt":
 #    path    => "/etc/puppet/hello2.txt",
@@ -122,4 +136,4 @@ node "slavedb" {
     key_val_separator => '=',
   }
 }
-
+ */
