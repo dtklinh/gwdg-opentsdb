@@ -1,12 +1,12 @@
 node "masterdb" {
-  include mytest::common
-  include mytest::masternode
-  include mytest
+  include prepare_puppetdb::common
+  include prepare_puppetdb::masternode
+  include prepare_puppetdb
 }
 node "slavedb" {
-  include mytest::common
-  include mytest::slavenode
-  include mytest
+  include prepare_puppetdb::common
+  include prepare_puppetdb::slavenode
+  include prepare_puppetdb
   File_line <<| tag == "gwdg" |>>
 }
 #############################################################################

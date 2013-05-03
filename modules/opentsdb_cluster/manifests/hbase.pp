@@ -59,15 +59,27 @@ class opentsdb_cluster::hbase{
     group   => $opentsdb_cluster::mygroup_name,
     require  => File["reown_hbase"],
   }
-  file{"regionservers":
+  #####################################################################
+  ## This could be replaced by using exported resource
+#  file{"regionservers":
+#    path    => "${opentsdb_cluster::hbase_working_dir}/conf/regionservers",
+#    ensure  => present,
+#    content => template("opentsdb_cluster/hbase/conf/regionservers.erb"),
+#    owner   => $opentsdb_cluster::myuser_name,
+#    group   => $opentsdb_cluster::mygroup_name,
+#    require  => File["reown_hbase"],
+#  }
+  ########################################################################
+  @@file_line{"regionservers":
     path    => "${opentsdb_cluster::hbase_working_dir}/conf/regionservers",
     ensure  => present,
-    content => template("opentsdb_cluster/hbase/conf/regionservers.erb"),
-    owner   => $opentsdb_cluster::myuser_name,
-    group   => $opentsdb_cluster::mygroup_name,
-    require  => File["reown_hbase"],
+    line    => $::hostname,
+    require => File["reown_hbase"],
+    tag     => "regionservers",
   }
-  
+  if $::hostname == $opentsdb_cluster::puppet_hostname{
+    File_line <<| tag == "regionservers" |>>
+  }
 }
 
 class opentsdb_cluster::hbase::service{
