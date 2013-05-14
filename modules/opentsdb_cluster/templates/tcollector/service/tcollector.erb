@@ -8,25 +8,21 @@
 # Description:       Hadoop services
 # Short-Description: Enable Hadoop services including hdfs
 ### END INIT INFO
-# PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-PATH=/sbin:/bin:/usr/sbin:/usr/bin
-HADOOP_BIN=<%= scope.lookupvar('::opentsdb_cluster::hadoop_working_dir') %>/bin
-OPENTSDB_HOME=<%= scope.lookupvar('::opentsdb_cluster::opentsdb_working_dir') %>
-tsdtmp=${TMPDIR-'/tmp'}/tsd
-REGIONSERVERS=<%= scope.lookupvar('::opentsdb_cluster::puppet_hostname') %>,<%= scope.lookupvar('::opentsdb_cluster::slave_hostname') %>
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+TCOLLECTOR_HOME=<%= scope.lookupvar('::opentsdb_cluster::tcollector_working_dir') %>
 NAME=hadoop
 DESC=hadoop
 USER=<%= scope.lookupvar('::opentsdb_cluster::myuser_name') %>
 ROTATE_SUFFIX=
-test -x $HADOOP_BIN || exit 0
+# test -x $HADOOP_BIN || exit 0
 RETVAL=0
 set -e
 cd /
 
-start_opentsdb () {
+start_tcollector () {
     set +e
-    ##
-	$OPENTSDB_HOME/build/tsdb tsd --port=<%= scope.lookupvar('::opentsdb_cluster::opentsdb_port') %> --staticroot=$OPENTSDB_HOME/build/staticroot --cachedir=$tsdtmp --zkquorum=$REGIONSERVERS --auto-metric &
+#    su $USER -s /bin/sh -c $HADOOP_BIN/start-all.sh
+	nohup sudo $TCOLLECTOR_HOME/startstop start &
     case "$?" in
       0)
         echo SUCCESS
@@ -44,10 +40,10 @@ start_opentsdb () {
     set -e
 }
 
-stop_opentsdb () {
+stop_tcollector () {
     set +e
     if [ $RETVAL = 0 ] ; then
-        kill $(ps ax | grep tsdb | awk '{print substr($0,1,5)}')
+        sudo $TCOLLECTOR_HOME/startstop stop
         RETVAL=$?
         if [ $RETVAL != 0 ] ; then
             echo FAILED
@@ -59,25 +55,25 @@ stop_opentsdb () {
     set -e
 }
 
-restart_opentsdb() {
-    stop_hadoop
-    start_hadoop
+restart_tcollector() {
+    stop_tcollector
+    start_tcollector
 }
 
 case "$1" in
     start)
         echo -n "Starting $DESC: "
-        start_opentsdb
+        start_tcollector
         echo "$NAME."
         ;;
     stop)
         echo -n "Stopping $DESC: "
-        stop_opentsdb
+        stop_tcollector
         echo "$NAME."
         ;;
     force-reload|restart)
         echo -n "Restarting $DESC: "
-        restart_opentsdb
+        restart_tcollector
         echo "$NAME."
         ;;
     *)

@@ -29,6 +29,7 @@ class opentsdb_cluster::opentsdb{
     user      => $opentsdb_cluster::myuser_name,
     require   => [File["reown_opentsdb"],Service["hbase"]],
     path      => "${path}:${opentsdb_cluster::opentsdb_working_dir}",
+    timeout   => 0,
   }
   ## create table
   exec{"create_table":
@@ -38,6 +39,7 @@ class opentsdb_cluster::opentsdb{
     creates   => "${opentsdb_cluster::opentsdb_working_dir}/create_table.txt",
     require   => Exec["build_opentsdb"],
     path      => $::path,
+    timeout   => 0,
   }
   file{"${opentsdb_cluster::opentsdb_working_dir}/create_table.txt":
     ensure    => file,
@@ -48,14 +50,19 @@ class opentsdb_cluster::opentsdb{
     path    => "${opentsdb_cluster::service_path}/opentsdb",
     content => template("opentsdb_cluster/opentsdb/service/opentsdb.erb"),
     ensure  => present,
+    mode    => 777,
     require => File["reown_opentsdb"],
   }
-  
-#  service{"opentsdb":
-#    ensure  => running,
-#    require => [File["opentsdb_service"], Service["hbase"]],
-#    subscribe => File["opentsdb_service"],
-#  }
+  file{"/tmp/tsd":
+    ensure    => directory,
+    owner   => "${opentsdb_cluster::myuser_name}",
+    group   => "${opentsdb_cluster::mygroup_name}",
+  }
+  service{"opentsdb":
+    ensure  => running,
+    require => [File["opentsdb_service"], Service["hbase"], File["/tmp/tsd"]],
+    subscribe => File["opentsdb_service"],
+  }
 }
 
 

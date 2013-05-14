@@ -7,7 +7,7 @@
   </property>
   <property>
   	<name>hbase.rootdir</name>
-  	<value>hdfs://master:54310/hbase</value>
+  	<value>hdfs://<%= scope.lookupvar('::opentsdb_cluster::puppet_hostname') %>:54310/hbase</value>
   	<description>The directory shared by RegionServers.
  	</description></property>
   <property>
@@ -24,7 +24,7 @@
   </property>
   <property>
   	<name>hbase.zookeeper.quorum</name>
-  	<value>master,slave</value>
+  	<value><%= scope.lookupvar('::opentsdb_cluster::puppet_hostname') %>,<%= scope.lookupvar('::opentsdb_cluster::slave_hostname') %></value>
   	<description>Comma separated list of servers in the ZooKeeper Quorum.
  For example, "host1.mydomain.com,host2.mydomain.com,host3.mydomain.com".
  By default this is set to localhost for local and pseudo-distributed modes
@@ -34,12 +34,12 @@
  </description>
  </property>
  <property>
- 	<name>hbase.master.port</name>
+ 	<name>hbase.<%= scope.lookupvar('::opentsdb_cluster::puppet_hostname') %>.port</name>
  	<value>60000</value>
  </property>
  <property>
  	<name>hbase.zookeeper.property.dataDir</name>
- 	<value>/home/hduser/zookeeperdata</value>
+ 	<value>/home/<%= scope.lookupvar('::opentsdb_cluster::myuser_name') %>/zookeeperdata</value>
  	<description>Property from ZooKeeper’s config zoo.cfg.
  The directory where the snapshot is stored.
  	</description>

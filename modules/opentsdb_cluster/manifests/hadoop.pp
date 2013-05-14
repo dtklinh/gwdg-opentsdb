@@ -169,12 +169,12 @@ class opentsdb_cluster::hadoop::service {
     group   => "${opentsdb_cluster::mygroup_name}",
     mode    => 777,
     require => File["reown_hadoop"],
-#    notify  => Service["hadoop"],
+    notify  => Service["hadoop"],
   }
 
-#  service { "hadoop":
-#    ensure  => running,
-#    require => [Exec["format_hadoop"], File["hadoop_service"], File["id_rsa"], File["id_rsa.pub"], File["authorized_keys"]],
-#  }
+  service { "hadoop":
+    ensure  => running,
+    require => [Exec["format_hadoop"], File["hadoop_service"], File["id_rsa"], File["id_rsa.pub"], File["authorized_keys"]],
+  }
 }
 

@@ -8,6 +8,7 @@ Vagrant::Config.run do |config|
    		master_config.vm.box = "masterdb"
    		master_config.vm.box_url = "https://github.com/downloads/roderik/VagrantQuantal64Box/quantal64.box"
    		master_config.vm.network :hostonly, "192.168.33.60"
+   		master_config.vm.customize ["modifyvm", :id, "--memory", 2048]
    		master_config.vm.host_name = "masterdb"
 #   		master_config.hosts.aliases = ["masterdb.top.gwdg.de", "puppet"]
    		master_config.vm.share_folder  "module", "/etc/puppet/modules", "~/workspace/mypuppetdb/modules"
@@ -35,7 +36,8 @@ Vagrant::Config.run do |config|
 #   		slave_config.hosts.aliases = ["slavedb.top.gwdg.de", "agent"]
 #   		slave_config.vm.provision :shell, :inline => "dpkg -l | grep puppetlabs-release 1>/dev/null ; if [ $? == 1 ];then wget https://apt.puppetlabs.com/puppetlabs-release-quantal.deb && dpkg -i puppetlabs-release-quantal.deb && apt-get update && apt-get install -y puppet facter -t puppetlabs;fi"
 #		config.vm.provision :shell, :inline => "puppet resource host masterdb ip='192.168.33.60'"
-   		slave_config.vm.provision :puppet_server, :options => ["--debug", "--verbose", "--summarize", "--no-daemonize", "--onetime"] do |puppet|
+#   		slave_config.vm.provision :puppet_server, :options => ["--debug", "--verbose", "--summarize", "--no-daemonize", "--onetime"] do |puppet|
+		slave_config.vm.provision :puppet_server, :options => ["--debug", "--verbose", "--summarize"] do |puppet|
       		puppet.puppet_server = "masterdb"
       		puppet.puppet_node	 = "slavedb"
     	end

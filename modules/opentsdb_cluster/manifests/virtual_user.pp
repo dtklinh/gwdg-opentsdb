@@ -45,10 +45,11 @@ class opentsdb_cluster::virtual_user::add_role{
 }
 
 class opentsdb_cluster::virtual_user::ssh_conn{
-  host{"slave":
-    ensure          => present,
-    ip              => "${opentsdb_cluster::slave_ip}",
-  }
+#  host{"slave":
+#    name            => $opentsdb_cluster::slave_hostname,
+#    ensure          => present,
+#    ip              => "${opentsdb_cluster::slave_ip}",
+#  }
   sshkey{"tsdb":
     type            => rsa,
     ensure          => present,

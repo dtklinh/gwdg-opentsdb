@@ -1,5 +1,5 @@
 #import "puppetdb/*"
-
+/*
 class opentsdb_cluster::puppet_database {
   # # prepare
   if $opentsdb_cluster::puppet_hostname == $::hostname {
@@ -72,3 +72,5 @@ class opentsdb_cluster::puppet_database::common {
 #    tag    => "hostname",
 #  }
 }
+
+*/

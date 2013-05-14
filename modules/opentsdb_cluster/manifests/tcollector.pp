@@ -31,23 +31,24 @@ class opentsdb_cluster::tcollector{
     group   => $opentsdb_cluster::mygroup_name,
     mode    => 777,
     require => File["reown_tcollector"],
-#    notify  => Service["tcollector"],
+    notify  => Service["tcollector"],
   }
   ## service
   file{"tcollector_service":
     path    => "${opentsdb_cluster::service_path}/tcollector",
+    content => template("opentsdb_cluster/tcollector/service/tcollector.erb"),
     ensure  => present,
     mode    => 777,
     owner   => $opentsdb_cluster::myuser_name,
     group   => $opentsdb_cluster::mygroup_name,
-#    notify  => Service["tcollector"],
+    notify  => Service["tcollector"],
     require => File["startstop"],
   }
   
-#  service{"tcollector":
-#    ensure  => running,
-#    require => [File["tcollector_service"], Service["opentsdb"]],
-#  }
+  service{"tcollector":
+    ensure  => running,
+    require => [File["tcollector_service"], Service["opentsdb"], File["/var/log/tcollector.log"]],
+  }
 }
 
 
