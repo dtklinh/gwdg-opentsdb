@@ -27,6 +27,7 @@ class opentsdb_cluster (
   $install_opentsdb      = false,
   $install_tcollector    = false,
   $setup_user            = false,
+  $setup_lzo             = false, 
   $lzo_parent_dir        = "/usr/local"
   ) {
   $hadoop_working_dir = "${hadoop_parent_dir}/hadoop-${hadoop_version}"
@@ -38,6 +39,11 @@ class opentsdb_cluster (
 #  include opentsdb_cluster::puppet_database
 #  Host <<| tag == "hostname" |>>
 
+#################################---install LZO---############################################
+  if $setup_lzo == true{
+    include opentsdb_cluster::lzo
+  }
+  ###########################################################################
   # #######################---Prepare Machines---########################
   if $setup_user == true {
     include opentsdb_cluster::virtual_user
@@ -77,9 +83,9 @@ class opentsdb_cluster (
 
   #######################################################################
   ###########################--- Install LZO ---##########################
-  if $compression == 'LZO'{
-    include opentsdb_cluster::lzo
-  }
+#  if $compression == 'LZO'{
+#    include opentsdb_cluster::lzo
+#  }
   ########################################################################
 
   # ########################---Install Opentsdb---########################
