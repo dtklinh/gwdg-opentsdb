@@ -41,7 +41,7 @@ class opentsdb_cluster (
 
 #################################---install LZO---############################################
   if $setup_lzo == true{
-    include opentsdb_cluster::lzo
+    include opentsdb_cluster::compression
   }
   ###########################################################################
   # #######################---Prepare Machines---########################
