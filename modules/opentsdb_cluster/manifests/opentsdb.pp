@@ -1,7 +1,7 @@
 class opentsdb_cluster::opentsdb{
   include opentsdb_cluster::hbase
   ## download package
-  package{["dh-autoreconf","git","gnuplot"]:
+  package{["dh-autoreconf","gnuplot"]:
     ensure  => installed,
   }
   exec{"download_opentsdb":

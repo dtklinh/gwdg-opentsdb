@@ -70,7 +70,7 @@ class opentsdb_cluster::compression {
     command => "ant compile-native jar",
     cwd     => $opentsdb_cluster::lzo_working_dir,
     user    => $opentsdb_cluster::myuser_name,
-    creates => "${opentsdb_cluster::lzo_working_dir}/build",
+    creates => "${opentsdb_cluster::lzo_working_dir}/build/hadoop-lzo-0.4.15.jar",
     require => [File["reown_lzo"], Package["ant"], Package["liblzo2-dev"], Exec["exec_addvar"]],
     path    => $::path,
   }

@@ -8,14 +8,14 @@ class prepare_puppetdb::common{
   }
   host { "masterdb":
     name         => "masterdb",
-    host_aliases => ["masterdb.top.gwdg.de", "puppet"],
+#    host_aliases => ["masterdb.top.gwdg.de", "puppet"],
     ip           => '192.168.33.60',
     ensure       => present,
   }
 
   host { "slavedb":
     name         => "slavedb",
-    host_aliases => ["slavedb.top.gwdg.de", "agent"],
+#    host_aliases => ["slavedb.top.gwdg.de", "agent"],
     ip           => '192.168.33.65',
     ensure       => present,
   }
